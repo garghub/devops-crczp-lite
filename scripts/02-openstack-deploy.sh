@@ -212,6 +212,15 @@ configure_networking() {
     if ! grep -q "eth2:" /etc/netplan/50-vagrant.yaml; then
         echo "    eth2: {}" >> /etc/netplan/50-vagrant.yaml
         netplan apply
+        
+        log "running resolvectl dns eth0 8.8.8.8"
+        resolvectl dns eth0 8.8.8.8
+        log "Verifying DNS resolution..."
+        if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+            log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+        else
+            log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+        fi
     fi
 
     # Bring up eth2 interface
