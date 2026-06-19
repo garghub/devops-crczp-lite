@@ -58,6 +58,15 @@ configure_dns() {
     # Restart services
     systemctl restart systemd-resolved
     netplan apply
+    
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
 
     log_success "DNS configuration completed"
 }
@@ -66,8 +75,26 @@ configure_dns() {
 install_snap_packages() {
     log "Installing snap packages..."
 
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
+
     # Ensure snapd is properly installed
     retry snap install core snapd
+    
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
 
     # Install required snap packages
     local packages=("opentofu --classic" "kubectl --classic" "helm --classic")
@@ -77,15 +104,44 @@ install_snap_packages() {
         retry snap install $package
     done
 
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
+    
     log_success "Snap packages installation completed"
 }
 
 # Update system and install APT packages
 install_apt_packages() {
     log "Updating package lists..."
+    
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
+    
     retry apt update
 
     log "Installing APT packages..."
+    
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
+    
     local packages=(
         "python3-dev"
         "libffi-dev"
@@ -99,9 +155,27 @@ install_apt_packages() {
 
     retry apt install -y "${packages[@]}"
 
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
+    
     # Reinstall certificates to fix potential SSL issues
     retry apt install --reinstall ca-certificates
 
+    log "running resolvectl dns eth0 8.8.8.8"
+    resolvectl dns eth0 8.8.8.8
+    log "Verifying DNS resolution..."
+    if ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
+        log_success "DNS connectivity verified (ping to 8.8.8.8 succeeded)"
+    else
+        log_warning "DNS connectivity check failed (ping to 8.8.8.8 did not respond)"
+    fi
+    
     log_success "APT packages installation completed"
 }
 
